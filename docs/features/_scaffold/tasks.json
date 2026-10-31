@@ -1,0 +1,50 @@
+{
+  "slug": "_scaffold",
+  "tasks": [
+    {
+      "id": "S1",
+      "title": "Create the folder structure, entry point, and baseline health module",
+      "layer": "scaffold",
+      "deps": [],
+      "acs": [],
+      "dod": "npm run build compiles, and the process boots",
+      "files_hint": ["package.json", "tsconfig.json", "src/index.ts", "src/modules/health/", "src/db/sqlite.ts", "src/ui/styles.css", ".gitignore"]
+    },
+    {
+      "id": "S2",
+      "title": "Wire Vitest and a boot smoke test",
+      "layer": "scaffold",
+      "deps": ["S1"],
+      "acs": [],
+      "dod": "npm test is green, and the smoke test shows the app boots",
+      "files_hint": ["tests/smoke.test.ts"]
+    },
+    {
+      "id": "S3",
+      "title": "Set up dbmate and an empty up-down migration",
+      "layer": "scaffold",
+      "deps": ["S1"],
+      "acs": [],
+      "dod": "dbmate up and dbmate down both succeed on a temporary SQLite file",
+      "files_hint": ["migrations/"]
+    },
+    {
+      "id": "S4",
+      "title": "Add the CI workflow for build, test, and lint",
+      "layer": "scaffold",
+      "deps": ["S2"],
+      "acs": [],
+      "dod": "The workflow file is valid and calls npm run build, npm test, and npm run lint",
+      "files_hint": [".github/workflows/ci.yml"]
+    },
+    {
+      "id": "S5",
+      "title": "Write CLAUDE.md from the foundation conventions",
+      "layer": "scaffold",
+      "deps": ["S1"],
+      "acs": [],
+      "dod": "CLAUDE.md matches the conventions in docs/architecture-map.md",
+      "files_hint": ["CLAUDE.md"]
+    }
+  ]
+}
