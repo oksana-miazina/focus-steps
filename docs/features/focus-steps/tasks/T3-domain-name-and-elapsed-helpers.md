@@ -9,8 +9,8 @@ files_hint: ["src/modules/shared/", "tests/"]
 owner: "Owner"
 estimate: "S"
 context_budget: "S"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T3 — Add name trim/validation and open-stair display-elapsed helpers
@@ -86,9 +86,9 @@ Internal — no API surface.
 
 ## Checklist
 
-- [ ] Add trim + `isBlankName` helpers — `src/modules/shared/` (or equivalent small module folder)
-- [ ] Add `displayElapsedSeconds(elapsed, visibleStartedAt, now)` helper
-- [ ] Unit tests for trim/blank and display elapsed — `tests/`
+- [x] Add trim + `isBlankName` helpers — `src/modules/shared/` (or equivalent small module folder)
+- [x] Add `displayElapsedSeconds(elapsed, visibleStartedAt, now)` helper
+- [x] Unit tests for trim/blank and display elapsed — `tests/`
 
 ## Edge cases
 
@@ -100,6 +100,6 @@ Internal — no API surface.
 
 ## Definition of Done
 
-- [ ] Unit tests for trim/empty name rules and display_elapsed_seconds pass
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Unit tests for trim/empty name rules and display_elapsed_seconds pass
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean
