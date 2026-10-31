@@ -4,6 +4,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { openDatabase } from "./db/sqlite.js";
 import { handle } from "./modules/health/http.js";
+import { tryHandle as tryHandleOpenStair } from "./modules/open-stair/http.js";
 
 const stylesPath = path.join(process.cwd(), "src", "ui", "styles.css");
 
@@ -17,7 +18,20 @@ export function start(port = Number(process.env.PORT ?? 3000)): Promise<Server> 
       res.end(css);
       return;
     }
-    handle(req, res, db);
+    void (async () => {
+      if (await tryHandleOpenStair(req, res, db)) {
+        return;
+      }
+      handle(req, res, db);
+    })().catch((error: unknown) => {
+      const message = error instanceof Error ? error.message : "internal error";
+      if (!res.headersSent) {
+        res.writeHead(500, { "content-type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ code: "internal.error", message }));
+      } else {
+        res.end();
+      }
+    });
   });
   server.on("close", () => {
     db.close();

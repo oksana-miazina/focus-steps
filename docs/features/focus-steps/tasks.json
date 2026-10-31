@@ -80,7 +80,7 @@
         "src/modules/open-stair/http.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T6-open-stair-api.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T7",

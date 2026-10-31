@@ -13,7 +13,7 @@
 | T3 | Name trim/validation + display-elapsed helpers | domain | Owner | S | — | done | COMMIT |
 | T4 | open-stair repository | infra | Owner | M | T1, T2, T3 | done | COMMIT |
 | T5 | openStair service rules | app | Owner | M | T4 | done | COMMIT |
-| T6 | POST /api/v1/stairs | ports | Owner | M | T5 | todo | — |
+| T6 | POST /api/v1/stairs | ports | Owner | M | T5 | done | COMMIT |
 | T7 | home repository | infra | Owner | M | T1, T2 | todo | — |
 | T8 | home service | app | Owner | M | T7, T3 | todo | — |
 | T9 | home/goal/finish/hide API routes | ports | Owner | M | T8 | todo | — |

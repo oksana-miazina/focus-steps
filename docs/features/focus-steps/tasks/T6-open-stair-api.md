@@ -9,8 +9,8 @@ files_hint: ["src/modules/open-stair/http.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T6 — Expose openStair as POST /api/v1/stairs
@@ -106,9 +106,9 @@ No DB changes.
 
 ## Checklist
 
-- [ ] Add `src/modules/open-stair/http.ts` JSON handler for `POST /api/v1/stairs`
-- [ ] Map service errors to OpenAPI status/code/message
-- [ ] Handler/integration test for 201/400/409
+- [x] Add `src/modules/open-stair/http.ts` JSON handler for `POST /api/v1/stairs`
+- [x] Map service errors to OpenAPI status/code/message
+- [x] Handler/integration test for 201/400/409
 
 ## Edge cases
 
@@ -119,6 +119,6 @@ No DB changes.
 
 ## Definition of Done
 
-- [ ] Handler returns 201 OpenStair, 400 empty_* codes, 409 already_open with `{code,message}`
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Handler returns 201 OpenStair, 400 empty_* codes, 409 already_open with `{code,message}`
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean
