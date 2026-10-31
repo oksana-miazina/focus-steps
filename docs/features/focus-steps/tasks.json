@@ -133,7 +133,7 @@
         "src/modules/correct/service.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T10-correct-service.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T11",

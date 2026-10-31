@@ -17,7 +17,7 @@
 | T7 | home repository | infra | Owner | M | T1, T2 | done | COMMIT |
 | T8 | home service | app | Owner | M | T7, T3 | done | COMMIT |
 | T9 | home/goal/finish/hide API routes | ports | Owner | M | T8 | done | COMMIT |
-| T10 | correct module service + repo | app | Owner | M | T1, T2, T3 | todo | — |
+| T10 | correct module service + repo | app | Owner | M | T1, T2, T3 | done | COMMIT |
 | T11 | PATCH /api/v1/stairs/{stairId} | ports | Owner | S | T10 | todo | — |
 | T12 | Shared SSR UI primitives | ui | Owner | S | — | done | COMMIT |
 | T13 | Render SCR-01 Home | ui | Owner | M | T9, T12 | todo | — |

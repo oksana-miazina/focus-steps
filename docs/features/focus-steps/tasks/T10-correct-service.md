@@ -9,8 +9,8 @@ files_hint: ["src/modules/correct/repo.ts", "src/modules/correct/service.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T10 — Implement correct module service and repository
@@ -81,9 +81,9 @@ Internal — no API surface. (Ports in T11.)
 
 ## Checklist
 
-- [ ] Add `src/modules/correct/repo.ts` (load finished stair; update name/time)
-- [ ] Add `src/modules/correct/service.ts` with validation + derived progress return shape
-- [ ] Tests for AC-07/13/14
+- [x] Add `src/modules/correct/repo.ts` (load finished stair; update name/time)
+- [x] Add `src/modules/correct/service.ts` with validation + derived progress return shape
+- [x] Tests for AC-07/13/14
 
 ## Edge cases
 
@@ -95,6 +95,6 @@ Internal — no API surface. (Ports in T11.)
 
 ## Definition of Done
 
-- [ ] Tests keep valid corrections and refuse empty/negative time and empty name without writing
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Tests keep valid corrections and refuse empty/negative time and empty name without writing
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean
