@@ -19,12 +19,30 @@ export function formatElapsedHms(totalSeconds: number): string {
   return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
+export const VISIBILITY_HIDE_SCRIPT = [
+  "<script>",
+  "(function () {",
+  "  function hide() {",
+  "    try {",
+  '      navigator.sendBeacon("/api/v1/visibility/hide");',
+  "    } catch (e) {",
+  '      fetch("/api/v1/visibility/hide", { method: "POST", keepalive: true }).catch(function () {});',
+  "    }",
+  "  }",
+  '  document.addEventListener("visibilitychange", function () {',
+  '    if (document.visibilityState === "hidden") hide();',
+  "  });",
+  '  window.addEventListener("pagehide", hide);',
+  "})();",
+  "</script>",
+].join("");
+
 export function renderAppShell(options: {
   title: string;
   body: string;
   scripts?: string;
 }): string {
-  const scripts = options.scripts ?? "";
+  const scripts = `${VISIBILITY_HIDE_SCRIPT}${options.scripts ?? ""}`;
   return [
     "<!DOCTYPE html>",
     '<html lang="en">',

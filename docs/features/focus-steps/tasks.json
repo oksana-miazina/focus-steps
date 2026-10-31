@@ -224,7 +224,7 @@
         "src/index.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T17-wire-modules-and-visibility.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T18",

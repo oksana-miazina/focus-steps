@@ -9,8 +9,8 @@ files_hint: ["src/index.ts"]
 owner: "Owner"
 estimate: "S"
 context_budget: "S"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T17 — Wire product modules and page-visibility hide signal
@@ -71,10 +71,10 @@ No DB changes.
 
 ## Checklist
 
-- [ ] Route product handlers from `src/index.ts` while keeping styles.css + health
-- [ ] Keep `server.listen(..., "127.0.0.1", …)`
-- [ ] Attach page visibility/unload → hideVisibility
-- [ ] Smoke test still boots
+- [x] Route product handlers from `src/index.ts` while keeping styles.css + health
+- [x] Keep `server.listen(..., "127.0.0.1", …)`
+- [x] Attach page visibility/unload → hideVisibility
+- [x] Smoke test still boots
 
 ## Edge cases
 
@@ -85,6 +85,6 @@ No DB changes.
 
 ## Definition of Done
 
-- [ ] App serves product routes on 127.0.0.1; hide signal wired; smoke boot passes
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] App serves product routes on 127.0.0.1; hide signal wired; smoke boot passes
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean

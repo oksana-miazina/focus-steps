@@ -12,6 +12,8 @@ const stylesPath = path.join(process.cwd(), "src", "ui", "styles.css");
 
 export function start(port = Number(process.env.PORT ?? 3000)): Promise<Server> {
   const db = openDatabase();
+  // Product pages + APIs: open-stair, home (incl. `/`), correct; styles; health fallback.
+  // Page HTML injects visibility/hide (AC-08). Listen is loopback-only (AC-05).
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? "/", "http://127.0.0.1");
     if (req.method === "GET" && url.pathname === "/styles.css") {
