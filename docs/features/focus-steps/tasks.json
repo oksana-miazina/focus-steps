@@ -1,0 +1,244 @@
+{
+  "slug": "focus-steps",
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Promote staged goals migration into live migrations/",
+      "layer": "migration",
+      "deps": [],
+      "acs": ["AC-09", "AC-11", "AC-16"],
+      "dod": "Staged 01_create_goals is promoted to live migrations/; dbmate up creates goals + goals_name_uk and down drops them cleanly.",
+      "files_hint": [
+        "docs/features/focus-steps/migrations/01_create_goals.up.sql",
+        "docs/features/focus-steps/migrations/01_create_goals.down.sql"
+      ],
+      "file": "docs/features/focus-steps/tasks/T1-promote-goals-migration.md",
+      "status": "todo"
+    },
+    {
+      "id": "T2",
+      "title": "Promote staged stairs migration into live migrations/",
+      "layer": "migration",
+      "deps": ["T1"],
+      "acs": ["AC-01", "AC-06", "AC-08"],
+      "dod": "Staged 02_create_stairs is promoted; dbmate up creates stairs with FK, status check, stairs_goal_id_idx, and stairs_one_open_uk; down reverts cleanly.",
+      "files_hint": [
+        "docs/features/focus-steps/migrations/02_create_stairs.up.sql",
+        "docs/features/focus-steps/migrations/02_create_stairs.down.sql"
+      ],
+      "file": "docs/features/focus-steps/tasks/T2-promote-stairs-migration.md",
+      "status": "todo"
+    },
+    {
+      "id": "T3",
+      "title": "Add name trim/validation and open-stair display-elapsed helpers",
+      "layer": "domain",
+      "deps": [],
+      "acs": ["AC-04", "AC-10", "AC-11", "AC-15"],
+      "dod": "Unit tests pass for trim/empty name rules and display_elapsed_seconds = elapsed + open segment when visible_started_at is set.",
+      "files_hint": [
+        "src/modules/shared/",
+        "tests/"
+      ],
+      "file": "docs/features/focus-steps/tasks/T3-domain-name-and-elapsed-helpers.md",
+      "status": "todo"
+    },
+    {
+      "id": "T4",
+      "title": "Add open-stair repository for goals and open stairs",
+      "layer": "infra",
+      "deps": ["T1", "T2", "T3"],
+      "acs": ["AC-01", "AC-09", "AC-11"],
+      "dod": "Repo integration tests insert a goal by trimmed name, refuse duplicate name rows, insert one open stair, and read whether a stair is open.",
+      "files_hint": [
+        "src/modules/open-stair/repo.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T4-open-stair-repo.md",
+      "status": "todo"
+    },
+    {
+      "id": "T5",
+      "title": "Implement openStair service rules",
+      "layer": "app",
+      "deps": ["T4"],
+      "acs": ["AC-01", "AC-04", "AC-06", "AC-09", "AC-10", "AC-11"],
+      "dod": "Service unit/integration tests cover happy open, empty stair/goal name refusals, second-open refusal with no writes, and find-or-create by trimmed case-sensitive name.",
+      "files_hint": [
+        "src/modules/open-stair/service.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T5-open-stair-service.md",
+      "status": "todo"
+    },
+    {
+      "id": "T6",
+      "title": "Expose openStair as POST /api/v1/stairs",
+      "layer": "ports",
+      "deps": ["T5"],
+      "acs": ["AC-01", "AC-04", "AC-06", "AC-09", "AC-10", "AC-11"],
+      "dod": "Handler returns 201 OpenStair, 400 open_stair.empty_stair_name|empty_goal_name, and 409 open_stair.already_open with {code,message}.",
+      "files_hint": [
+        "src/modules/open-stair/http.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T6-open-stair-api.md",
+      "status": "todo"
+    },
+    {
+      "id": "T7",
+      "title": "Add home repository for goals, open stair, finish, and visibility pause",
+      "layer": "infra",
+      "deps": ["T1", "T2"],
+      "acs": ["AC-02", "AC-03", "AC-08", "AC-12", "AC-16"],
+      "dod": "Repo tests list goals, read the open stair, list finished stairs for a goal, finish the open row, and close a visibility segment without deleting the open stair.",
+      "files_hint": [
+        "src/modules/home/repo.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T7-home-repo.md",
+      "status": "todo"
+    },
+    {
+      "id": "T8",
+      "title": "Implement home service (getHome, finish, goal progress, hide)",
+      "layer": "app",
+      "deps": ["T7", "T3"],
+      "acs": ["AC-02", "AC-03", "AC-08", "AC-12", "AC-15", "AC-16", "AC-17"],
+      "dod": "Service tests cover home readout, finish freezing elapsed, derived total on progress, empty finished list total 0, duplicate finished names both counted, and hide adding 0 gap seconds.",
+      "files_hint": [
+        "src/modules/home/service.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T8-home-service.md",
+      "status": "todo"
+    },
+    {
+      "id": "T9",
+      "title": "Expose home, goal progress, finish, and hide API routes",
+      "layer": "ports",
+      "deps": ["T8"],
+      "acs": ["AC-02", "AC-03", "AC-08", "AC-12", "AC-15", "AC-16", "AC-17"],
+      "dod": "GET /api/v1/home, GET /api/v1/goals, GET /api/v1/goals/{goalId}, POST /api/v1/stairs/open/finish, POST /api/v1/visibility/hide match OpenAPI status codes and schemas.",
+      "files_hint": [
+        "src/modules/home/http.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T9-home-api.md",
+      "status": "todo"
+    },
+    {
+      "id": "T10",
+      "title": "Implement correct module service and repository",
+      "layer": "app",
+      "deps": ["T1", "T2", "T3"],
+      "acs": ["AC-07", "AC-13", "AC-14"],
+      "dod": "Tests keep a valid name/time correction and refuse empty/negative time and empty name without writing.",
+      "files_hint": [
+        "src/modules/correct/repo.ts",
+        "src/modules/correct/service.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T10-correct-service.md",
+      "status": "todo"
+    },
+    {
+      "id": "T11",
+      "title": "Expose correctFinishedStair as PATCH /api/v1/stairs/{stairId}",
+      "layer": "ports",
+      "deps": ["T10"],
+      "acs": ["AC-07", "AC-13", "AC-14"],
+      "dod": "Handler returns 200 GoalProgress or 400 correct.invalid_time|correct.empty_stair_name with {code,message}.",
+      "files_hint": [
+        "src/modules/correct/http.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T11-correct-api.md",
+      "status": "todo"
+    },
+    {
+      "id": "T12",
+      "title": "Add shared SSR UI primitives in styles.css",
+      "layer": "ui",
+      "deps": [],
+      "acs": ["AC-15", "AC-16"],
+      "dod": "styles.css defines AppShell, PrimaryButton, TextLink, InlineMessage, FieldLabel classes usable by SCR-01…04 with no React/Tailwind.",
+      "files_hint": [
+        "src/ui/styles.css"
+      ],
+      "file": "docs/features/focus-steps/tasks/T12-ui-shared-primitives.md",
+      "status": "todo"
+    },
+    {
+      "id": "T13",
+      "title": "Render SCR-01 Home default, empty, and error states",
+      "layer": "ui",
+      "deps": ["T9", "T12"],
+      "acs": ["AC-06", "AC-08", "AC-15", "AC-16"],
+      "dod": "HTML Home shows goal names, open-stair panel with mark-done, empty hint, and already_open InlineMessage; loading/success/validation N/A per screens.md.",
+      "files_hint": [
+        "src/modules/home/http.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T13-ui-scr-01-home.md",
+      "status": "todo"
+    },
+    {
+      "id": "T14",
+      "title": "Render SCR-02 Open a stair default and validation states",
+      "layer": "ui",
+      "deps": ["T6", "T12"],
+      "acs": ["AC-01", "AC-04", "AC-10"],
+      "dod": "HTML open form posts stair+goal names; empty-name validation stays on SCR-02 with contract message; success redirects to Home.",
+      "files_hint": [
+        "src/modules/open-stair/http.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T14-ui-scr-02-open-stair.md",
+      "status": "todo"
+    },
+    {
+      "id": "T15",
+      "title": "Render SCR-03 Goal default and empty states",
+      "layer": "ui",
+      "deps": ["T9", "T12"],
+      "acs": ["AC-02", "AC-03", "AC-12", "AC-17"],
+      "dod": "HTML Goal page shows finished stairs + derived total, duplicate names as separate rows, and empty finished/total zero when only open stair exists.",
+      "files_hint": [
+        "src/modules/home/http.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T15-ui-scr-03-goal.md",
+      "status": "todo"
+    },
+    {
+      "id": "T16",
+      "title": "Render SCR-04 Correct a stair default and validation states",
+      "layer": "ui",
+      "deps": ["T11", "T12"],
+      "acs": ["AC-07", "AC-13", "AC-14"],
+      "dod": "HTML correct form prefills values; invalid time/name stays on SCR-04 with contract message; kept correction redirects to Goal.",
+      "files_hint": [
+        "src/modules/correct/http.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T16-ui-scr-04-correct.md",
+      "status": "todo"
+    },
+    {
+      "id": "T17",
+      "title": "Wire product modules and page-visibility hide signal",
+      "layer": "wiring",
+      "deps": ["T6", "T9", "T11", "T13", "T14", "T15", "T16"],
+      "acs": ["AC-05", "AC-08"],
+      "dod": "src/index.ts routes home/open-stair/correct on 127.0.0.1; page hide/unload posts visibility/hide; smoke boot still passes.",
+      "files_hint": [
+        "src/index.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T17-wire-modules-and-visibility.md",
+      "status": "todo"
+    },
+    {
+      "id": "T18",
+      "title": "Add integration tests for open, finish, progress, correct, and hide",
+      "layer": "tests",
+      "deps": ["T17"],
+      "acs": ["AC-01", "AC-02", "AC-03", "AC-04", "AC-05", "AC-06", "AC-07", "AC-08", "AC-09", "AC-10", "AC-11", "AC-12", "AC-13", "AC-14", "AC-15", "AC-16", "AC-17"],
+      "dod": "Vitest integration suite on a temp SQLite file asserts the OpenAPI outcomes for open/finish/progress/correct/hide and documents loopback-only AC-05.",
+      "files_hint": [
+        "tests/",
+        "smoke.test.ts"
+      ],
+      "file": "docs/features/focus-steps/tasks/T18-integration-tests.md",
+      "status": "todo"
+    }
+  ]
+}
