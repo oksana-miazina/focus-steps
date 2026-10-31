@@ -73,15 +73,12 @@ External: none in v1 (deliberate). The trust zone ends at this computer's proces
 **C4 Context (L1):**
 
 ```mermaid
-C4Context
-    title focus-steps — System Context
-
-    Person(owner, "Owner", "Opens stairs and reads goal progress on this computer")
-    System(app, "Focus Steps", "Local app: one open stair, elapsed time, goals and finished stairs")
-    System_Ext(calendar, "Google Calendar", "Live lectures; not read or written by Focus Steps")
-
-    Rel(owner, app, "Uses in the browser on this computer", "HTTP")
-    Rel(owner, calendar, "Keeps live lectures elsewhere", "outside this product")
+flowchart LR
+  owner["Owner: opens stairs and reads goal progress on this computer"]
+  app["Focus Steps: one open stair, elapsed time, goals and finished stairs"]
+  calendar["Google Calendar: live lectures, not read or written by Focus Steps"]
+  owner -->|Uses in the browser on this computer, HTTP| app
+  owner -->|Keeps live lectures elsewhere| calendar
 ```
 
 ## 4. Solution strategy
@@ -130,29 +127,27 @@ src/
 **C4 Container (L2):**
 
 ```mermaid
-C4Container
-    title focus-steps — Containers
-
-    Person(owner, "Owner", "Uses Focus Steps on this computer")
-
-    Container_Boundary(app, "Focus Steps process") {
-        Container(web, "Web frontend", "TypeScript, server-rendered HTML", "SCR-01…04 pages and forms")
-        Container(api, "Backend service", "TypeScript, node:http", "home, open-stair, correct, health handlers and rules")
-        ContainerDb(db, "SQLite file", "SQLite", "Goals, stairs, visibility-segment time on this computer")
-    }
-
-    Rel(owner, web, "Opens pages in the browser", "HTTP")
-    Rel(web, api, "Same process: form posts and page loads")
-    Rel(api, db, "Reads and writes", "SQL")
+flowchart TB
+  owner["Owner: uses Focus Steps on this computer"]
+  subgraph process["Focus Steps process"]
+    web["Web frontend: TypeScript, server-rendered HTML. SCR-01 to SCR-04"]
+    api["Backend service: TypeScript, node:http. home, open-stair, correct, health"]
+    db[("SQLite file: goals, stairs, visibility-segment time")]
+  end
+  owner -->|Opens pages in the browser, HTTP| web
+  web -->|Same process: form posts and page loads| api
+  api -->|Reads and writes, SQL| db
 ```
 
 `web` and `api` are two surfaces in one OS process (feature ADR-0001). They are not separately deployed.
 
 ## 6. Runtime view
 
-Participants use §5 container names. Messages are semantic (no HTTP verbs or paths). Full AC coverage is for the `sequences` stage; here we seed the primary flows.
+Ordered to match `spec.md` §4. Design-seed flows (1–3 below, concrete §5 names) are retained verbatim; sequences-added flows use generic participants (`user` / `ui` / `service` / `data-store`). Messages are semantic (no HTTP verbs, status numbers, or SQL). All flows are sync.
 
-**Critical flow 1: Open one stair (happy path, US-01 / AC-01 / AC-09)**
+### Open one stair (happy path, US-01 / AC-01 / AC-09 / AC-11 / AC-15)
+
+Design seed. «Find or create goal by trimmed name» covers AC-11 (same characters after end spaces join; capitals differ). Home showing the open stair covers AC-15.
 
 ```mermaid
 sequenceDiagram
@@ -171,7 +166,159 @@ sequenceDiagram
     Web-->>Owner: Home shows stair name, goal, time running
 ```
 
-**Critical flow 2: Second stair refused (US-05 / AC-06)**
+### Refuse open — empty stair or goal name (US-01 / AC-04 / AC-10)
+
+Screen path: SCR-02 (aligns with `ux-flows.md` US-01 refuse branches).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as user
+    participant UI as ui
+    participant S as service
+    participant D as data-store
+
+    Note over U,S: Precondition: no stair is open
+    U->>UI: Names stair and goal, asks to open (SCR-02)
+    UI->>S: Open stair under goal
+    alt stair name empty or only spaces (AC-04)
+        Note over S,D: no goal written, no stair written
+        S-->>UI: Refuse - name must be a completed action
+        UI-->>U: Stay on SCR-02 with plain explanation
+    else goal name empty or only spaces (AC-10)
+        Note over S,D: no goal written, no stair written
+        S-->>UI: Refuse - goal needs a name
+        UI-->>U: Stay on SCR-02 with plain explanation
+    end
+    Note over U,S: Postcondition: nothing created, time not started, no open stair
+```
+
+### Pause when the app is no longer visible (US-01 / AC-08 / ADR-0003)
+
+Design seed. Cross-cutting under US-01.
+
+```mermaid
+sequenceDiagram
+    actor Owner
+    participant Web as Web frontend
+    participant Backend as Backend service
+    participant Store as SQLite file
+    Owner->>Web: Closes the last view (or crash / power loss ends the process)
+    Web->>Backend: App no longer visible
+    Backend->>Store: Close current visibility segment into accumulated seconds
+    Store-->>Backend: Open stair kept, gap not added
+    Note over Owner,Store: Later the Owner opens the app again
+    Owner->>Web: Opens the app on this computer
+    Web->>Backend: Show home with open stair
+    Backend->>Store: Read open stair and start a new visibility segment
+    Store-->>Backend: Open stair still the only open one
+    Backend-->>Web: Stair name, goal, time so far (gap was 0 s)
+    Web-->>Owner: Same open stair, time runs again
+```
+
+### Mark the open stair done (US-02 / AC-02)
+
+Screen path: SCR-01 → SCR-03 (aligns with `ux-flows.md` US-02).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as user
+    participant UI as ui
+    participant S as service
+    participant D as data-store
+
+    Note over U,S: Precondition: one stair is open, time has been counting while visible
+    U->>UI: Marks the open stair done (SCR-01)
+    UI->>S: Finish open stair
+    S->>D: Read open stair and close current visibility segment
+    D-->>S: Open stair with accumulated seconds
+    S->>D: Mark stair finished with counted time
+    Note over S,D: persists finished stair time under its goal
+    D-->>S: Stair finished
+    S-->>UI: Finished stair and goal progress
+    UI-->>U: SCR-03 shows stair among finished with the time it ran
+    Note over U,S: Postcondition: no open stair, finished stair in goal list, time stopped
+```
+
+### See a goal's progress (US-03 / AC-03 / AC-12 / AC-16 / AC-17)
+
+Screen path: SCR-01 → SCR-03 (aligns with `ux-flows.md` US-03). Goal total is derived when reading finished stairs (ADR-0004).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as user
+    participant UI as ui
+    participant S as service
+    participant D as data-store
+
+    Note over U,S: Precondition: one or more goals exist on this computer
+    U->>UI: Looks at the app (SCR-01)
+    UI->>S: List goals
+    S->>D: Read goal names
+    D-->>S: Goal names
+    S-->>UI: Goal names
+    UI-->>U: Each goal name is shown, choosable (AC-16)
+    U->>UI: Chooses a goal by name
+    UI->>S: Show goal progress
+    S->>D: Read finished stairs for that goal
+    D-->>S: Finished stairs with times
+    alt goal has finished stairs (AC-03)
+        Note over S,D: derives goal total as sum of finished times
+        S-->>UI: Finished stairs and derived total
+        UI-->>U: SCR-03 shows each finished stair and the total
+    else only stair still open, none finished (AC-12)
+        Note over S,D: open stair excluded from finished list, total zero
+        S-->>UI: Empty finished list, total zero
+        UI-->>U: SCR-03 shows no finished stairs and total zero
+    else two finished stairs share a name (AC-17)
+        Note over S,D: both stairs kept, total uses both times
+        S-->>UI: Both finished stairs and derived total
+        UI-->>U: SCR-03 shows both stairs and total of both times
+    end
+    Note over U,S: Postcondition: Owner sees that goal's finished progress only, open stair not listed as finished
+```
+
+### Correct a finished stair (US-04 / AC-07 / AC-13 / AC-14)
+
+Screen path: SCR-03 → SCR-04 (aligns with `ux-flows.md` US-04). Goal total follows the corrected time on the next read (ADR-0004).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as user
+    participant UI as ui
+    participant S as service
+    participant D as data-store
+
+    Note over U,S: Precondition: a finished stair is shown under its goal on SCR-03
+    U->>UI: Asks to change name or time (SCR-04)
+    UI->>S: Correct finished stair
+    alt valid name and time zero or more (AC-07)
+        S->>D: Update finished stair name and or time
+        Note over S,D: persists corrected finished stair
+        D-->>S: Stair updated
+        S->>D: Read finished stairs for that goal
+        Note over S,D: derives goal total from corrected times
+        D-->>S: Finished stairs with new total
+        S-->>UI: Corrected stair and updated goal total
+        UI-->>U: SCR-03 shows new name or time and total uses new time
+    else time empty or less than zero (AC-13)
+        Note over S,D: no write, previous time kept
+        S-->>UI: Refuse - time must be the time the stair ran
+        UI-->>U: Stay on SCR-04 with plain explanation
+    else name empty or only spaces (AC-14)
+        Note over S,D: no write, previous name kept
+        S-->>UI: Refuse - name must be a completed action
+        UI-->>U: Stay on SCR-04 with plain explanation
+    end
+    Note over U,S: Postcondition: kept correction updates goal total on read, or refused change leaves stair and total unchanged
+```
+
+### Second stair refused (US-05 / AC-06)
+
+Design seed.
 
 ```mermaid
 sequenceDiagram
@@ -183,31 +330,50 @@ sequenceDiagram
     Web->>Backend: Open stair under goal
     Backend->>Store: Read whether a stair is already open
     Store-->>Backend: One stair open
-    Backend-->>Web: Refuse — mark the current stair done first
+    Backend-->>Web: Refuse - mark the current stair done first
     Note over Backend,Store: No goal created, no second stair written
-    Web-->>Owner: Plain explanation; current stair still open
+    Web-->>Owner: Plain explanation, current stair still open
 ```
 
-**Critical flow 3: Pause when the app is no longer visible (AC-08 / ADR-0003)**
+### Coverage
 
-```mermaid
-sequenceDiagram
-    actor Owner
-    participant Web as Web frontend
-    participant Backend as Backend service
-    participant Store as SQLite file
-    Owner->>Web: Closes the last view (or crash / power loss ends the process)
-    Web->>Backend: App no longer visible
-    Backend->>Store: Close current visibility segment into accumulated seconds
-    Store-->>Backend: Open stair kept; gap not added
-    Note over Owner,Store: Later the Owner opens the app again
-    Owner->>Web: Opens the app on this computer
-    Web->>Backend: Show home with open stair
-    Backend->>Store: Read open stair and start a new visibility segment
-    Store-->>Backend: Open stair still the only open one
-    Backend-->>Web: Stair name, goal, time so far (gap was 0 s)
-    Web-->>Owner: Same open stair; time runs again
-```
+**Use-case pass (`spec.md` §4):**
+
+| User story | Flow(s) |
+|---|---|
+| US-01 Open one stair | Open one stair; Refuse open; Pause when not visible |
+| US-02 Mark the stair done | Mark the open stair done |
+| US-03 See a goal's progress | See a goal's progress |
+| US-04 Correct a finished stair | Correct a finished stair |
+| US-05 Hear why a second stair is refused | Second stair refused |
+
+**AC pass (`spec.md` §5):**
+
+| AC | Shown by |
+|---|---|
+| AC-01 | Open one stair (happy) |
+| AC-02 | Mark the open stair done |
+| AC-03 | See a goal's progress — finished stairs branch |
+| AC-04 | Refuse open — empty stair name branch |
+| AC-05 | N/A — process binds to this computer only (loopback); no remote runtime path |
+| AC-06 | Second stair refused |
+| AC-07 | Correct a finished stair — valid correction branch |
+| AC-08 | Pause when the app is no longer visible |
+| AC-09 | Open one stair (find-or-create goal) |
+| AC-10 | Refuse open — empty goal name branch |
+| AC-11 | Open one stair — find-or-create by trimmed name |
+| AC-12 | See a goal's progress — only-open / empty finished branch |
+| AC-13 | Correct a finished stair — invalid time branch |
+| AC-14 | Correct a finished stair — empty name branch |
+| AC-15 | Open one stair — Home shows open stair (postcondition) |
+| AC-16 | See a goal's progress — list goals on SCR-01 |
+| AC-17 | See a goal's progress — duplicate finished names branch |
+
+### Flags for design / data-model
+
+- Persist hints for indexes: open stair uniqueness (at most one open), goal lookup by trimmed name, finished stairs by goal, visibility-segment close into accumulated seconds.
+- No new runtime participant beyond §5 / generic vocabulary. No new ADR flagged from sequences.
+- Design-seed diagrams keep concrete §5 display names; sequences-added diagrams keep generic labels — intentional additive style, not a participant invent.
 
 ## 7. Deployment view
 
