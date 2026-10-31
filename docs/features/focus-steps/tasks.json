@@ -185,7 +185,7 @@
         "src/modules/open-stair/http.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T14-ui-scr-02-open-stair.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T15",

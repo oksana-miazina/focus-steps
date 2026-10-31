@@ -9,8 +9,8 @@ files_hint: ["src/modules/open-stair/http.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T14 — Render SCR-02 Open a stair default and validation states
@@ -77,9 +77,9 @@ No DB changes.
 
 ## Checklist
 
-- [ ] SSR Open form + POST handler in `src/modules/open-stair/http.ts`
-- [ ] Validation re-renders SCR-02 with message; success redirects Home
-- [ ] Test default + validation HTML paths
+- [x] SSR Open form + POST handler in `src/modules/open-stair/http.ts`
+- [x] Validation re-renders SCR-02 with message; success redirects Home
+- [x] Test default + validation HTML paths
 
 ## Edge cases
 
@@ -90,6 +90,6 @@ No DB changes.
 
 ## Definition of Done
 
-- [ ] SCR-02 default + validation states work; tests assert empty-name messages stay on page
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] SCR-02 default + validation states work; tests assert empty-name messages stay on page
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean
