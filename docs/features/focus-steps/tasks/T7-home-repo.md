@@ -9,8 +9,8 @@ files_hint: ["src/modules/home/repo.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T7 — Add home repository for goals, open stair, finish, and visibility pause
@@ -99,8 +99,8 @@ Internal — no API surface.
 
 ## Checklist
 
-- [ ] Create `src/modules/home/repo.ts`: listGoals, getOpenStair, listFinishedStairs(goalId), finishOpenStair, pauseVisibility, resumeVisibilitySegment
-- [ ] Integration tests on temp SQLite
+- [x] Create `src/modules/home/repo.ts`: listGoals, getOpenStair, listFinishedStairs(goalId), finishOpenStair, pauseVisibility, resumeVisibilitySegment
+- [x] Integration tests on temp SQLite
 
 ## Edge cases
 
@@ -111,6 +111,6 @@ Internal — no API surface.
 
 ## Definition of Done
 
-- [ ] Repo tests list goals, read open stair, list finished, finish open row, close visibility segment without deleting open stair
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Repo tests list goals, read open stair, list finished, finish open row, close visibility segment without deleting open stair
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean

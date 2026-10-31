@@ -93,7 +93,7 @@
         "src/modules/home/repo.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T7-home-repo.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T8",
