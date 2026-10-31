@@ -9,8 +9,8 @@ files_hint: ["src/modules/correct/http.ts"]
 owner: "Owner"
 estimate: "S"
 context_budget: "S"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T11 — Expose correctFinishedStair as PATCH /api/v1/stairs/{stairId}
@@ -76,9 +76,9 @@ No DB changes.
 
 ## Checklist
 
-- [ ] Add `src/modules/correct/http.ts` PATCH handler
-- [ ] Map refusals to 400 codes/messages; success returns GoalProgress
-- [ ] Handler test for 200/400
+- [x] Add `src/modules/correct/http.ts` PATCH handler
+- [x] Map refusals to 400 codes/messages; success returns GoalProgress
+- [x] Handler test for 200/400
 
 ## Edge cases
 
@@ -89,6 +89,6 @@ No DB changes.
 
 ## Definition of Done
 
-- [ ] Handler returns 200 GoalProgress or 400 correct.invalid_time|correct.empty_stair_name
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Handler returns 200 GoalProgress or 400 correct.invalid_time|correct.empty_stair_name
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean

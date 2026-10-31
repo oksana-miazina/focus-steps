@@ -146,7 +146,7 @@
         "src/modules/correct/http.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T11-correct-api.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T12",

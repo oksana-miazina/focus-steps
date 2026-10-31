@@ -3,6 +3,7 @@ import { createServer, type Server } from "node:http";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { openDatabase } from "./db/sqlite.js";
+import { tryHandle as tryHandleCorrect } from "./modules/correct/http.js";
 import { tryHandle as tryHandleHome } from "./modules/home/http.js";
 import { handle } from "./modules/health/http.js";
 import { tryHandle as tryHandleOpenStair } from "./modules/open-stair/http.js";
@@ -24,6 +25,9 @@ export function start(port = Number(process.env.PORT ?? 3000)): Promise<Server> 
         return;
       }
       if (await tryHandleHome(req, res, db)) {
+        return;
+      }
+      if (await tryHandleCorrect(req, res, db)) {
         return;
       }
       handle(req, res, db);
