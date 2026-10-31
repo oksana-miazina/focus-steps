@@ -54,7 +54,7 @@
         "src/modules/open-stair/repo.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T4-open-stair-repo.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T5",

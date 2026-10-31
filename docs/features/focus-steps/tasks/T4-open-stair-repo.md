@@ -9,8 +9,8 @@ files_hint: ["src/modules/open-stair/repo.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T4 — Add open-stair repository for goals and open stairs
@@ -83,9 +83,9 @@ Internal — no API surface.
 
 ## Checklist
 
-- [ ] Create `src/modules/open-stair/repo.ts` modelled on `src/modules/health/repo.ts`
-- [ ] Implement find goal by trimmed name, insert goal, find open stair, insert open stair (ULID + `created_at`)
-- [ ] Integration tests with temp `SQLITE_PATH`
+- [x] Create `src/modules/open-stair/repo.ts` modelled on `src/modules/health/repo.ts`
+- [x] Implement find goal by trimmed name, insert goal, find open stair, insert open stair (ULID + `created_at`)
+- [x] Integration tests with temp `SQLITE_PATH`
 
 ## Edge cases
 
@@ -96,6 +96,6 @@ Internal — no API surface.
 
 ## Definition of Done
 
-- [ ] Repo integration tests insert/find goal and open stair; detect existing open row
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Repo integration tests insert/find goal and open stair; detect existing open row
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean
