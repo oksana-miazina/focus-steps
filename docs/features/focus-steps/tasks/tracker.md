@@ -22,7 +22,7 @@
 | T12 | Shared SSR UI primitives | ui | Owner | S | — | done | COMMIT |
 | T13 | Render SCR-01 Home | ui | Owner | M | T9, T12 | done | COMMIT |
 | T14 | Render SCR-02 Open a stair | ui | Owner | M | T6, T12 | done | COMMIT |
-| T15 | Render SCR-03 Goal | ui | Owner | M | T9, T12 | todo | — |
+| T15 | Render SCR-03 Goal | ui | Owner | M | T9, T12 | done | COMMIT |
 | T16 | Render SCR-04 Correct a stair | ui | Owner | M | T11, T12 | todo | — |
 | T17 | Wire modules + visibility hide | wiring | Owner | S | T6, T9, T11, T13, T14, T15, T16 | todo | — |
 | T18 | Integration tests for core flows | tests | Owner | M | T17 | todo | — |

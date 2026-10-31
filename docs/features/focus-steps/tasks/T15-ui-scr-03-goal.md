@@ -9,8 +9,8 @@ files_hint: ["src/modules/home/http.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T15 — Render SCR-03 Goal default and empty states
@@ -89,9 +89,9 @@ No DB changes.
 
 ## Checklist
 
-- [ ] SSR Goal page in `src/modules/home/http.ts` (default + empty)
-- [ ] Per-row Correct link; Home back link
-- [ ] Test finished list + empty finished copy
+- [x] SSR Goal page in `src/modules/home/http.ts` (default + empty)
+- [x] Per-row Correct link; Home back link
+- [x] Test finished list + empty finished copy
 
 ## Edge cases
 
@@ -102,6 +102,6 @@ No DB changes.
 
 ## Definition of Done
 
-- [ ] SCR-03 default + empty states match screens.md; tests cover finished list and empty total zero
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] SCR-03 default + empty states match screens.md; tests cover finished list and empty total zero
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean

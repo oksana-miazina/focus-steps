@@ -15,9 +15,39 @@ import {
   getHome,
   hideVisibility,
   HomeError,
+  type GoalProgressDto,
   type HomeDto,
 } from "./service.js";
 import { listGoals } from "./repo.js";
+
+export function renderGoalHtml(progress: GoalProgressDto): string {
+  const parts: string[] = [];
+  parts.push(
+    `<p>Total time: ${escapeHtml(formatElapsedHms(progress.total_elapsed_seconds))}</p>`,
+  );
+  if (progress.finished_stairs.length === 0) {
+    parts.push('<p class="empty-finished-hint">No finished stairs yet.</p>');
+    parts.push("<p>(An open stair is not listed here.)</p>");
+  } else {
+    parts.push("<h2>Finished stairs</h2>");
+    parts.push("<ul>");
+    for (const stair of progress.finished_stairs) {
+      parts.push("<li>");
+      parts.push(`<span>${escapeHtml(stair.name)}</span> `);
+      parts.push(`<span>${escapeHtml(formatElapsedHms(stair.elapsed_seconds))}</span> `);
+      parts.push(
+        `<a class="text-link" href="/stairs/${encodeURIComponent(stair.id)}/correct">Correct</a>`,
+      );
+      parts.push("</li>");
+    }
+    parts.push("</ul>");
+  }
+  parts.push('<p><a class="text-link" href="/">← Home</a></p>');
+  return renderAppShell({
+    title: `Focus Steps · ${progress.goal.name}`,
+    body: parts.join(""),
+  });
+}
 
 export function renderHomeHtml(home: HomeDto, options: { error?: string | null } = {}): string {
   const parts: string[] = [];
@@ -86,6 +116,21 @@ export async function tryHandle(
     } catch (error) {
       if (error instanceof HomeError) {
         redirect(res, "/");
+        return true;
+      }
+      throw error;
+    }
+    return true;
+  }
+
+  const goalPageMatch = /^\/goals\/([^/]+)$/.exec(pathname);
+  if (req.method === "GET" && goalPageMatch !== null) {
+    try {
+      const progress = getGoalProgress(db, decodeURIComponent(goalPageMatch[1]!));
+      writeHtml(res, 200, renderGoalHtml(progress));
+    } catch (error) {
+      if (error instanceof HomeError) {
+        writeError(res, 404, error.code, error.message);
         return true;
       }
       throw error;

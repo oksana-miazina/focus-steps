@@ -198,7 +198,7 @@
         "src/modules/home/http.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T15-ui-scr-03-goal.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T16",
