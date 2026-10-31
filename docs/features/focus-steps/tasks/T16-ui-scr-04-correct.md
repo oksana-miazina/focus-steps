@@ -9,8 +9,8 @@ files_hint: ["src/modules/correct/http.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T16 — Render SCR-04 Correct a stair default and validation states
@@ -77,9 +77,9 @@ No DB changes.
 
 ## Checklist
 
-- [ ] SSR Correct form + POST/PATCH handler in `src/modules/correct/http.ts`
-- [ ] Prefill current values; validation stays on SCR-04; success → Goal page
-- [ ] Test default + validation paths
+- [x] SSR Correct form + POST/PATCH handler in `src/modules/correct/http.ts`
+- [x] Prefill current values; validation stays on SCR-04; success → Goal page
+- [x] Test default + validation paths
 
 ## Edge cases
 
@@ -90,6 +90,6 @@ No DB changes.
 
 ## Definition of Done
 
-- [ ] SCR-04 default + validation states work; tests assert invalid time/name messages
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] SCR-04 default + validation states work; tests assert invalid time/name messages
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean

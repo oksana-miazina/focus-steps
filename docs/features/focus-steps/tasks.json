@@ -211,7 +211,7 @@
         "src/modules/correct/http.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T16-ui-scr-04-correct.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T17",
