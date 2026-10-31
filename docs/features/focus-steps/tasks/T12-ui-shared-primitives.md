@@ -9,8 +9,8 @@ files_hint: ["src/ui/styles.css"]
 owner: "Owner"
 estimate: "S"
 context_budget: "S"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T12 — Add shared SSR UI primitives in styles.css
@@ -70,9 +70,9 @@ Internal — no API surface.
 
 ## Checklist
 
-- [ ] Extend `src/ui/styles.css` with classes for AppShell, PrimaryButton, TextLink, InlineMessage, FieldLabel (and form field spacing)
-- [ ] Keep server-rendered CSS only — no new styling system
-- [ ] Visual smoke: `/styles.css` still served from `src/index.ts`
+- [x] Extend `src/ui/styles.css` with classes for AppShell, PrimaryButton, TextLink, InlineMessage, FieldLabel (and form field spacing)
+- [x] Keep server-rendered CSS only — no new styling system
+- [x] Visual smoke: `/styles.css` still served from `src/index.ts`
 
 ## Edge cases
 
@@ -83,6 +83,6 @@ Internal — no API surface.
 
 ## Definition of Done
 
-- [ ] styles.css defines the shared classes SCR-01…04 will use; no React/Tailwind introduced
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] styles.css defines the shared classes SCR-01…04 will use; no React/Tailwind introduced
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean

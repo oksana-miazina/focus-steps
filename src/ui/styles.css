@@ -1,3 +1,85 @@
+:root {
+  --fs-ink: #1c1b19;
+  --fs-muted: #5c574f;
+  --fs-paper: #f7f3eb;
+  --fs-accent: #0f6a5a;
+  --fs-danger: #8b2e2e;
+  --fs-line: #d7d0c4;
+  --fs-space: 1rem;
+}
+
 body {
-  font-family: sans-serif;
+  margin: 0;
+  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+  color: var(--fs-ink);
+  background: linear-gradient(160deg, #efe8da 0%, var(--fs-paper) 45%, #e7f0ec 100%);
+  min-height: 100vh;
+}
+
+.app-shell {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: calc(var(--fs-space) * 2) var(--fs-space) calc(var(--fs-space) * 3);
+}
+
+.app-shell h1 {
+  font-size: 1.75rem;
+  margin: 0 0 var(--fs-space);
+  letter-spacing: -0.02em;
+}
+
+.primary-button {
+  display: inline-block;
+  border: 0;
+  border-radius: 0.35rem;
+  padding: 0.65rem 1.1rem;
+  background: var(--fs-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.primary-button:hover,
+.primary-button:focus-visible {
+  filter: brightness(1.05);
+}
+
+.text-link {
+  color: var(--fs-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.text-link:hover,
+.text-link:focus-visible {
+  color: var(--fs-ink);
+}
+
+.inline-message {
+  margin: var(--fs-space) 0;
+  padding: 0.75rem 0.9rem;
+  border-left: 3px solid var(--fs-danger);
+  background: rgba(139, 46, 46, 0.08);
+  color: var(--fs-danger);
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+  color: var(--fs-muted);
+}
+
+.field {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: var(--fs-space);
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--fs-line);
+  border-radius: 0.35rem;
+  font: inherit;
+  background: #fff;
 }

@@ -159,7 +159,7 @@
         "src/ui/styles.css"
       ],
       "file": "docs/features/focus-steps/tasks/T12-ui-shared-primitives.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T13",

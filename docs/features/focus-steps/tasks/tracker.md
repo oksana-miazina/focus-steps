@@ -19,7 +19,7 @@
 | T9 | home/goal/finish/hide API routes | ports | Owner | M | T8 | todo | — |
 | T10 | correct module service + repo | app | Owner | M | T1, T2, T3 | todo | — |
 | T11 | PATCH /api/v1/stairs/{stairId} | ports | Owner | S | T10 | todo | — |
-| T12 | Shared SSR UI primitives | ui | Owner | S | — | todo | — |
+| T12 | Shared SSR UI primitives | ui | Owner | S | — | done | COMMIT |
 | T13 | Render SCR-01 Home | ui | Owner | M | T9, T12 | todo | — |
 | T14 | Render SCR-02 Open a stair | ui | Owner | M | T6, T12 | todo | — |
 | T15 | Render SCR-03 Goal | ui | Owner | M | T9, T12 | todo | — |
