@@ -238,7 +238,7 @@
         "smoke.test.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T18-integration-tests.md",
-      "status": "todo"
+      "status": "done"
     }
   ]
 }

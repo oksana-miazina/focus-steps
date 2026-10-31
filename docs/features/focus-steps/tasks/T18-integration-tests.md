@@ -9,8 +9,8 @@ files_hint: ["tests/", "smoke.test.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "L"   # justified: full §5 AC suite + fixtures across all modules in one integration harness
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T18 — Add integration tests for open, finish, progress, correct, and hide
@@ -62,10 +62,10 @@ Each id in `acs` is asserted by at least one Vitest case using the verbatim outc
 
 ## Checklist
 
-- [ ] Add temp-DB helpers under `tests/` per data-model fixtures
-- [ ] Integration tests for open/finish/home/progress/correct/hide covering every AC id
-- [ ] AC-05 assertion: server bound to `127.0.0.1`
-- [ ] `npm test` green including existing smoke
+- [x] Add temp-DB helpers under `tests/` per data-model fixtures
+- [x] Integration tests for open/finish/home/progress/correct/hide covering every AC id
+- [x] AC-05 assertion: server bound to `127.0.0.1`
+- [x] `npm test` green including existing smoke
 
 ## Edge cases
 
@@ -77,6 +77,6 @@ Each id in `acs` is asserted by at least one Vitest case using the verbatim outc
 
 ## Definition of Done
 
-- [ ] Vitest integration suite on temp SQLite asserts OpenAPI outcomes for open/finish/progress/correct/hide and documents loopback-only AC-05; `npm test` passes
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Vitest integration suite on temp SQLite asserts OpenAPI outcomes for open/finish/progress/correct/hide and documents loopback-only AC-05; `npm test` passes
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean
