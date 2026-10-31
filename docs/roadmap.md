@@ -20,7 +20,7 @@ The owner opens the local app, records one stair at a time as a smallest complet
 | # | Step | Source | Size | Status |
 |---|---|---|:---:|---|
 | 1 | The empty project builds, boots, tests run, and a migration applies and reverts | `docs/architecture-map.md` ## Stack | S | idea |
-| 2 | Record one stair under a named goal with its elapsed time, and see that goal's finished stairs and total time | `docs/idea-brief.md` ## 7. Recommendation | M | idea |
+| 2 | Record one stair under a named goal with its elapsed time, and see that goal's finished stairs and total time — [spec](features/focus-steps/) | `docs/idea-brief.md` ## 7. Recommendation | M | spec'd |
 
 ## Not yet specified
 
