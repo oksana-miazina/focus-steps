@@ -1,0 +1,433 @@
+openapi: 3.1.0
+
+info:
+  title: Focus Steps API
+  version: 0.1.0
+  description: |
+    Local HTTP contract for Focus Steps on one computer. The Owner opens one stair under a named
+    goal, keeps time while they can see the app, marks the stair done, reads that goal's finished
+    stairs and total time, and may correct a finished stair's name or time. There is no account and
+    no remote caller — the process listens on loopback; the web-frontend surface in the same process
+    maps form posts and page loads field-for-field onto these operations (feature ADR-0001,
+    foundation ADR-0001). Goal total is derived when reading finished stairs (feature ADR-0004), not
+    stored on the goal row.
+
+servers:
+  - url: http://127.0.0.1:3000
+    description: Local loopback (PORT env or 3000)
+
+# No account — every operation is public on loopback (AC-05). Deviation from BearerAuth default;
+# foundation ADR-0001 / spec §6.1.
+security: []
+
+paths:
+  /api/v1/home:
+    get:
+      summary: Show home — goal names and the open stair if any
+      description: |
+        Returns every goal name and, when a stair is open, that stair's name, goal, and display
+        elapsed time (AC-15, AC-16). When an open stair exists, starts a new visibility segment
+        so time runs again while the Owner can see the app (AC-08 resume path).
+      operationId: getHome
+      responses:
+        "200":
+          description: Home view
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Home" }
+              example:
+                goals:
+                  - id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                    name: "Homework"
+                    created_at: "2026-10-31T10:00:00.000Z"
+                open_stair:
+                  id: "01ARZ3NDEKTSV4RRFFQ69G5FB0"
+                  goal_id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                  goal_name: "Homework"
+                  name: "Write the outline"
+                  status: open
+                  elapsed_seconds: 120
+                  visible_started_at: "2026-10-31T12:00:00.000Z"
+                  display_elapsed_seconds: 125
+                  created_at: "2026-10-31T11:55:00.000Z"
+
+  /api/v1/goals:
+    get:
+      summary: List goals
+      description: |
+        Lists goal names the Owner can open (AC-16). One Owner, full table; cursor pagination
+        still wraps the list per contract convention.
+      operationId: listGoals
+      parameters:
+        - in: query
+          name: after
+          description: cursor — id of the last item seen; the page starts after it
+          schema: { type: string }
+        - in: query
+          name: before
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GoalPage" }
+              example:
+                items:
+                  - id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                    name: "Homework"
+                    created_at: "2026-10-31T10:00:00.000Z"
+                has_next: false
+                has_prev: false
+                next_cursor: null
+
+  /api/v1/goals/{goalId}:
+    get:
+      summary: Show a goal's finished stairs and total time
+      description: |
+        Finished stairs only; the open stair is excluded. total_elapsed_seconds is the sum of
+        finished stairs' elapsed_seconds (ADR-0004). Empty finished list → total 0 (AC-12).
+        Duplicate finished names stay as separate rows (AC-17).
+      operationId: getGoalProgress
+      parameters:
+        - $ref: "#/components/parameters/GoalId"
+      responses:
+        "200":
+          description: Goal progress
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GoalProgress" }
+              example:
+                goal:
+                  id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                  name: "Homework"
+                  created_at: "2026-10-31T10:00:00.000Z"
+                finished_stairs:
+                  - id: "01ARZ3NDEKTSV4RRFFQ69G5FB1"
+                    goal_id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                    name: "Write the outline"
+                    status: finished
+                    elapsed_seconds: 600
+                    visible_started_at: null
+                    created_at: "2026-10-31T09:00:00.000Z"
+                total_elapsed_seconds: 600
+
+  /api/v1/stairs:
+    post:
+      summary: Open one stair under a goal
+      description: |
+        Names the stair and the goal in one step. Trims end spaces on the goal name before
+        find-or-create (AC-11). Creates the goal only when the stair actually opens (AC-09).
+        Starts a visibility segment. Refuses empty stair or goal names and a second open stair
+        without writing a goal or stair (AC-04, AC-10, AC-06).
+      operationId: openStair
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/OpenStairRequest" }
+            example:
+              stair_name: "Write the outline"
+              goal_name: "Homework"
+      responses:
+        "201":
+          description: Stair opened; time starts
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OpenStair" }
+              example:
+                id: "01ARZ3NDEKTSV4RRFFQ69G5FB0"
+                goal_id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                goal_name: "Homework"
+                name: "Write the outline"
+                status: open
+                elapsed_seconds: 0
+                visible_started_at: "2026-10-31T12:00:00.000Z"
+                display_elapsed_seconds: 0
+                created_at: "2026-10-31T12:00:00.000Z"
+        "400":
+          description: Empty stair name or empty goal name (after trim)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                empty_stair_name:
+                  value:
+                    code: "open_stair.empty_stair_name"
+                    message: "The name has to be a completed action."
+                empty_goal_name:
+                  value:
+                    code: "open_stair.empty_goal_name"
+                    message: "The goal needs a name."
+        "409":
+          description: A stair is already open — mark it done first
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              example:
+                code: "open_stair.already_open"
+                message: "Mark the current stair done first."
+
+  /api/v1/stairs/open/finish:
+    post:
+      summary: Mark the open stair done
+      description: |
+        Closes the current visibility segment, freezes elapsed_seconds, sets status to finished
+        (AC-02). Returns that goal's progress including the newly finished stair.
+      operationId: finishOpenStair
+      responses:
+        "200":
+          description: Stair finished; goal progress includes it
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GoalProgress" }
+              example:
+                goal:
+                  id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                  name: "Homework"
+                  created_at: "2026-10-31T10:00:00.000Z"
+                finished_stairs:
+                  - id: "01ARZ3NDEKTSV4RRFFQ69G5FB0"
+                    goal_id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                    name: "Write the outline"
+                    status: finished
+                    elapsed_seconds: 600
+                    visible_started_at: null
+                    created_at: "2026-10-31T11:55:00.000Z"
+                total_elapsed_seconds: 600
+
+  /api/v1/stairs/{stairId}:
+    patch:
+      summary: Correct a finished stair's name and/or time
+      description: |
+        Updates name and/or elapsed_seconds in place on a finished stair (AC-07). Goal total is
+        not stored — the next progress read sums the corrected times (ADR-0004). Refuses empty
+        name and empty or negative time without writing (AC-13, AC-14).
+      operationId: correctFinishedStair
+      parameters:
+        - $ref: "#/components/parameters/StairId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CorrectStairRequest" }
+            example:
+              name: "Write the outline"
+              elapsed_seconds: 540
+      responses:
+        "200":
+          description: Correction kept; goal progress uses the new time
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GoalProgress" }
+              example:
+                goal:
+                  id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                  name: "Homework"
+                  created_at: "2026-10-31T10:00:00.000Z"
+                finished_stairs:
+                  - id: "01ARZ3NDEKTSV4RRFFQ69G5FB0"
+                    goal_id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+                    name: "Write the outline"
+                    status: finished
+                    elapsed_seconds: 540
+                    visible_started_at: null
+                    created_at: "2026-10-31T11:55:00.000Z"
+                total_elapsed_seconds: 540
+        "400":
+          description: Invalid time or empty stair name
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              examples:
+                invalid_time:
+                  value:
+                    code: "correct.invalid_time"
+                    message: "The time has to be the time the stair ran."
+                empty_stair_name:
+                  value:
+                    code: "correct.empty_stair_name"
+                    message: "The name has to be a completed action."
+
+  /api/v1/visibility/hide:
+    post:
+      summary: Pause the open stair when the app is no longer visible
+      description: |
+        Closes the current visibility segment into elapsed_seconds and clears visible_started_at.
+        The open stair stays open; the gap adds 0 seconds (AC-08, ADR-0003). Idempotent when
+        already paused (no open segment).
+      operationId: hideVisibility
+      responses:
+        "204":
+          description: Visibility segment closed (or already paused / no open stair)
+
+components:
+  parameters:
+    GoalId:
+      in: path
+      name: goalId
+      required: true
+      description: Application-generated ULID of the goal
+      schema: { $ref: "#/components/schemas/Ulid" }
+    StairId:
+      in: path
+      name: stairId
+      required: true
+      description: Application-generated ULID of the stair
+      schema: { $ref: "#/components/schemas/Ulid" }
+
+  responses:
+    Error:
+      description: Error — unified envelope
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+
+  schemas:
+    Ulid:
+      type: string
+      description: Application-generated ULID stored as TEXT (ADR-0003)
+      pattern: "^[0-9A-HJKMNP-TV-Z]{26}$"
+      example: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+
+    Error:
+      type: object
+      required: [code, message]
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          pattern: "^[a-z_]+\\.[a-z_]+$"
+          example: "open_stair.already_open"
+        message: { type: string }
+        details:
+          type: object
+          description: optional structured context (field errors, conflicting id, …)
+
+    Goal:
+      type: object
+      required: [id, name, created_at]
+      additionalProperties: false
+      properties:
+        id: { $ref: "#/components/schemas/Ulid" }
+        name:
+          type: string
+          description: Stored trimmed on write; UNIQUE; SQLite TEXT compare is case-sensitive
+          minLength: 1
+        created_at:
+          type: string
+          format: date-time
+          description: ISO-8601 UTC set by the application on insert
+
+    Stair:
+      type: object
+      required: [id, goal_id, name, status, elapsed_seconds, visible_started_at, created_at]
+      additionalProperties: false
+      properties:
+        id: { $ref: "#/components/schemas/Ulid" }
+        goal_id: { $ref: "#/components/schemas/Ulid" }
+        name:
+          type: string
+          description: Duplicate names under one goal allowed (AC-17)
+          minLength: 1
+        status:
+          type: string
+          enum: [open, finished]
+        elapsed_seconds:
+          type: integer
+          minimum: 0
+          description: |
+            Open — closed visibility segments so far; finished — frozen or corrected span
+        visible_started_at:
+          type: [string, "null"]
+          format: date-time
+          description: Start of the current visible segment; null when paused or finished (ADR-0003)
+        created_at:
+          type: string
+          format: date-time
+
+    OpenStair:
+      allOf:
+        - $ref: "#/components/schemas/Stair"
+        - type: object
+          required: [goal_name, display_elapsed_seconds]
+          properties:
+            goal_name:
+              type: string
+              description: Goal.name for the open stair's goal_id (AC-15)
+              minLength: 1
+            display_elapsed_seconds:
+              type: integer
+              minimum: 0
+              description: |
+                Service-computed — elapsed_seconds plus seconds since visible_started_at when
+                that column is non-null (data-model.md open-stair display time)
+
+    OpenStairRequest:
+      type: object
+      required: [stair_name, goal_name]
+      additionalProperties: false
+      properties:
+        stair_name:
+          type: string
+          description: Must be non-empty after trim; product does not judge the words (AC-04)
+        goal_name:
+          type: string
+          description: Must be non-empty after trim; find-or-create by trimmed name (AC-10, AC-11)
+
+    CorrectStairRequest:
+      type: object
+      additionalProperties: false
+      description: At least one of name or elapsed_seconds must be present
+      minProperties: 1
+      properties:
+        name:
+          type: string
+          description: Non-empty after trim when provided (AC-14)
+        elapsed_seconds:
+          type: integer
+          minimum: 0
+          description: Time the stair ran; refuse empty / less than zero (AC-13)
+
+    GoalProgress:
+      type: object
+      required: [goal, finished_stairs, total_elapsed_seconds]
+      additionalProperties: false
+      properties:
+        goal: { $ref: "#/components/schemas/Goal" }
+        finished_stairs:
+          type: array
+          items: { $ref: "#/components/schemas/Stair" }
+          description: status=finished only; open stair excluded (AC-12)
+        total_elapsed_seconds:
+          type: integer
+          minimum: 0
+          description: Sum of finished_stairs.elapsed_seconds (ADR-0004); not a goals column
+
+    Home:
+      type: object
+      required: [goals, open_stair]
+      additionalProperties: false
+      properties:
+        goals:
+          type: array
+          items: { $ref: "#/components/schemas/Goal" }
+        open_stair:
+          description: The single open stair, or null when none
+          oneOf:
+            - $ref: "#/components/schemas/OpenStair"
+            - type: "null"
+
+    GoalPage:
+      type: object
+      required: [items, has_next, has_prev]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Goal" }
+        has_next: { type: boolean }
+        has_prev: { type: boolean }
+        next_cursor: { type: [string, "null"] }
