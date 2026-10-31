@@ -9,8 +9,8 @@ files_hint: ["src/modules/home/http.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T13 — Render SCR-01 Home default, empty, and error states
@@ -86,9 +86,9 @@ No DB changes.
 
 ## Checklist
 
-- [ ] SSR HTML Home in `src/modules/home/http.ts` for default/empty/error
-- [ ] Mark-done control; goal name links; Start a stair control (hidden/disabled when open)
-- [ ] Smoke/HTML assertion test for empty + open-stair panel
+- [x] SSR HTML Home in `src/modules/home/http.ts` for default/empty/error
+- [x] Mark-done control; goal name links; Start a stair control (hidden/disabled when open)
+- [x] Smoke/HTML assertion test for empty + open-stair panel
 
 ## Edge cases
 
@@ -99,6 +99,6 @@ No DB changes.
 
 ## Definition of Done
 
-- [ ] HTML Home shows default/empty/error states per screens.md; tests cover open-stair panel + empty hint
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] HTML Home shows default/empty/error states per screens.md; tests cover open-stair panel + empty hint
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean

@@ -1,22 +1,26 @@
 import type { Server } from "node:http";
-import os from "node:os";
-import path from "node:path";
 import { afterAll, expect, it } from "vitest";
 import { start } from "../src/index.js";
+import { cleanupTempDb, createTempSqlitePath, runDbmate } from "./helpers/migrate-temp-db.js";
 
 let server: Server | undefined;
+let sqlitePath: string | undefined;
 
 afterAll(async () => {
-  if (server === undefined) {
-    return;
+  if (server !== undefined) {
+    await new Promise<void>((resolve, reject) => {
+      server?.close((error) => (error ? reject(error) : resolve()));
+    });
   }
-  await new Promise<void>((resolve, reject) => {
-    server?.close((error) => (error ? reject(error) : resolve()));
-  });
+  if (sqlitePath !== undefined) {
+    cleanupTempDb(sqlitePath);
+  }
 });
 
 it("boots and answers on the root page", async () => {
-  process.env.SQLITE_PATH = path.join(os.tmpdir(), `focus-steps-smoke-${process.pid}.sqlite`);
+  sqlitePath = createTempSqlitePath("smoke");
+  runDbmate(sqlitePath, "up");
+  process.env.SQLITE_PATH = sqlitePath;
   server = await start(0);
   const address = server.address();
   if (address === null || typeof address === "string") {
@@ -24,5 +28,7 @@ it("boots and answers on the root page", async () => {
   }
   const response = await fetch(`http://127.0.0.1:${address.port}/`);
   expect(response.status).toBe(200);
-  expect(await response.text()).toContain("Focus Steps is up.");
+  const html = await response.text();
+  expect(html).toContain("Focus Steps");
+  expect(html).toContain("app-shell");
 });

@@ -20,7 +20,7 @@
 | T10 | correct module service + repo | app | Owner | M | T1, T2, T3 | done | COMMIT |
 | T11 | PATCH /api/v1/stairs/{stairId} | ports | Owner | S | T10 | done | COMMIT |
 | T12 | Shared SSR UI primitives | ui | Owner | S | — | done | COMMIT |
-| T13 | Render SCR-01 Home | ui | Owner | M | T9, T12 | todo | — |
+| T13 | Render SCR-01 Home | ui | Owner | M | T9, T12 | done | COMMIT |
 | T14 | Render SCR-02 Open a stair | ui | Owner | M | T6, T12 | todo | — |
 | T15 | Render SCR-03 Goal | ui | Owner | M | T9, T12 | todo | — |
 | T16 | Render SCR-04 Correct a stair | ui | Owner | M | T11, T12 | todo | — |

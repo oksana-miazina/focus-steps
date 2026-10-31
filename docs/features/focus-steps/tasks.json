@@ -172,7 +172,7 @@
         "src/modules/home/http.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T13-ui-scr-01-home.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T14",
