@@ -9,8 +9,8 @@ files_hint: ["docs/features/focus-steps/migrations/01_create_goals.up.sql", "doc
 owner: "Owner"
 estimate: "S"
 context_budget: "S"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T1 — Promote staged goals migration into live migrations/
@@ -90,10 +90,10 @@ Internal — no API surface.
 
 ## Checklist
 
-- [ ] Confirm staged up/down match data-model (`docs/features/focus-steps/migrations/01_create_goals.*.sql`)
-- [ ] Promote into live `migrations/` with dbmate-compatible timestamped name (after baseline)
-- [ ] Run `dbmate … up` then `down` on a throwaway SQLite URL
-- [ ] Verify `goals` + `goals_name_uk` exist after up and are gone after down
+- [x] Confirm staged up/down match data-model (`docs/features/focus-steps/migrations/01_create_goals.*.sql`)
+- [x] Promote into live `migrations/` with dbmate-compatible timestamped name (after baseline)
+- [x] Run `dbmate … up` then `down` on a throwaway SQLite URL
+- [x] Verify `goals` + `goals_name_uk` exist after up and are gone after down
 
 ## Edge cases
 
@@ -104,6 +104,6 @@ Internal — no API surface.
 
 ## Definition of Done
 
-- [ ] Staged pair promoted to live `migrations/`; up creates `goals` + `goals_name_uk`; down drops them cleanly
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean (N/A for SQL-only beyond migration tooling)
+- [x] Staged pair promoted to live `migrations/`; up creates `goals` + `goals_name_uk`; down drops them cleanly
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean (N/A for SQL-only beyond migration tooling)

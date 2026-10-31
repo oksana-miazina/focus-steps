@@ -8,7 +8,7 @@
 
 | # | Task | Layer | Owner | Estimate | Blocked by | Status | Step |
 |---|---|---|---|---|---|---|---|
-| T1 | Promote staged goals migration | migration | Owner | S | — | todo | — |
+| T1 | Promote staged goals migration | migration | Owner | S | — | done | COMMIT |
 | T2 | Promote staged stairs migration | migration | Owner | S | T1 | todo | — |
 | T3 | Name trim/validation + display-elapsed helpers | domain | Owner | S | — | todo | — |
 | T4 | open-stair repository | infra | Owner | M | T1, T2, T3 | todo | — |
