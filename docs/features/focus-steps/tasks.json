@@ -67,7 +67,7 @@
         "src/modules/open-stair/service.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T5-open-stair-service.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T6",

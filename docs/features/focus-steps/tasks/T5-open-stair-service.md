@@ -9,8 +9,8 @@ files_hint: ["src/modules/open-stair/service.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T5 — Implement openStair service rules
@@ -106,9 +106,9 @@ Internal — no API surface. (Ports in T6.)
 
 ## Checklist
 
-- [ ] Implement `openStair({ stairName, goalName })` in `src/modules/open-stair/service.ts`
-- [ ] Order: blank checks → already-open check (no writes) → find-or-create goal → insert open stair with segment start
-- [ ] Tests for AC-01/04/06/09/10/11
+- [x] Implement `openStair({ stairName, goalName })` in `src/modules/open-stair/service.ts`
+- [x] Order: blank checks → already-open check (no writes) → find-or-create goal → insert open stair with segment start
+- [x] Tests for AC-01/04/06/09/10/11
 
 ## Edge cases
 
@@ -121,6 +121,6 @@ Internal — no API surface. (Ports in T6.)
 
 ## Definition of Done
 
-- [ ] Service tests cover happy open, empty refusals, second-open refusal with no writes, find-or-create by trimmed case-sensitive name
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Service tests cover happy open, empty refusals, second-open refusal with no writes, find-or-create by trimmed case-sensitive name
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean
