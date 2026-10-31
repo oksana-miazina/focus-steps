@@ -106,7 +106,7 @@
         "src/modules/home/service.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T8-home-service.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T9",

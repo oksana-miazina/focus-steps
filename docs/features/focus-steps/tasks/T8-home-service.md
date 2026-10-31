@@ -9,8 +9,8 @@ files_hint: ["src/modules/home/service.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T8 — Implement home service (getHome, finish, goal progress, hide)
@@ -110,9 +110,9 @@ Internal — no API surface. (Ports in T9.)
 
 ## Checklist
 
-- [ ] Implement getHome, finishOpenStair, getGoalProgress, hideVisibility in `src/modules/home/service.ts`
-- [ ] Derive `total_elapsed_seconds`; compute `display_elapsed_seconds` via T3 helper
-- [ ] Tests for listed ACs
+- [x] Implement getHome, finishOpenStair, getGoalProgress, hideVisibility in `src/modules/home/service.ts`
+- [x] Derive `total_elapsed_seconds`; compute `display_elapsed_seconds` via T3 helper
+- [x] Tests for listed ACs
 
 ## Edge cases
 
@@ -124,6 +124,6 @@ Internal — no API surface. (Ports in T9.)
 
 ## Definition of Done
 
-- [ ] Service tests cover home, finish, derived total, empty finished, duplicate names, hide gap 0 s
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Service tests cover home, finish, derived total, empty finished, duplicate names, hide gap 0 s
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean
