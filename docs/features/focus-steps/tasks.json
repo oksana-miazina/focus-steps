@@ -119,7 +119,7 @@
         "src/modules/home/http.ts"
       ],
       "file": "docs/features/focus-steps/tasks/T9-home-api.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T10",

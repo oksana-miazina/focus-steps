@@ -9,8 +9,8 @@ files_hint: ["src/modules/home/http.ts"]
 owner: "Owner"
 estimate: "M"
 context_budget: "M"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T9 — Expose home, goal progress, finish, and hide API routes
@@ -112,8 +112,8 @@ No DB changes.
 
 ## Checklist
 
-- [ ] Implement JSON routes in `src/modules/home/http.ts`
-- [ ] Contract/integration tests for status codes and schemas
+- [x] Implement JSON routes in `src/modules/home/http.ts`
+- [x] Contract/integration tests for status codes and schemas
 
 ## Edge cases
 
@@ -124,6 +124,6 @@ No DB changes.
 
 ## Definition of Done
 
-- [ ] Listed routes match OpenAPI status codes and schemas
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean
+- [x] Listed routes match OpenAPI status codes and schemas
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean
