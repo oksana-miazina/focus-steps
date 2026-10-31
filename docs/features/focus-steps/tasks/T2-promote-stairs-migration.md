@@ -9,8 +9,8 @@ files_hint: ["docs/features/focus-steps/migrations/02_create_stairs.up.sql", "do
 owner: "Owner"
 estimate: "S"
 context_budget: "S"
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T2 — Promote staged stairs migration into live migrations/
@@ -92,9 +92,9 @@ Internal — no API surface.
 
 ## Checklist
 
-- [ ] Confirm staged SQL matches data-model (`docs/features/focus-steps/migrations/02_create_stairs.*.sql`)
-- [ ] Promote into live `migrations/` after the goals migration
-- [ ] `dbmate up` then `down` on throwaway SQLite; verify partial unique index exists after up
+- [x] Confirm staged SQL matches data-model (`docs/features/focus-steps/migrations/02_create_stairs.*.sql`)
+- [x] Promote into live `migrations/` after the goals migration
+- [x] `dbmate up` then `down` on throwaway SQLite; verify partial unique index exists after up
 
 ## Edge cases
 
@@ -105,6 +105,6 @@ Internal — no API surface.
 
 ## Definition of Done
 
-- [ ] Staged pair promoted; up creates stairs + indexes; down reverts cleanly after T1 goals remain until their down
-- [ ] every Hard Rule inlined above still holds
-- [ ] lint + vet clean (N/A beyond migration tooling)
+- [x] Staged pair promoted; up creates stairs + indexes; down reverts cleanly after T1 goals remain until their down
+- [x] every Hard Rule inlined above still holds
+- [x] lint + vet clean (N/A beyond migration tooling)

@@ -27,7 +27,7 @@
         "docs/features/focus-steps/migrations/02_create_stairs.down.sql"
       ],
       "file": "docs/features/focus-steps/tasks/T2-promote-stairs-migration.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T3",

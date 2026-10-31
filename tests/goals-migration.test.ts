@@ -70,7 +70,20 @@ it("dbmate up creates goals + goals_name_uk and down drops them", () => {
     afterUp.close();
   }
 
-  runDbmate(sqlitePath, "down");
+  // Roll back until goals is gone (later migrations may sit on top of it).
+  for (let i = 0; i < 16; i += 1) {
+    const probe = new DatabaseSync(sqlitePath);
+    let hasGoals: boolean;
+    try {
+      hasGoals = tableExists(probe, "goals");
+    } finally {
+      probe.close();
+    }
+    if (!hasGoals) {
+      break;
+    }
+    runDbmate(sqlitePath, "down");
+  }
 
   const afterDown = new DatabaseSync(sqlitePath);
   try {
